@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CuisineType {
+  FastFood
+  Italian
+  Spanish
+  Mexican
+  Asian
+  Healthy
+  Others
+}
+
+model Restaurant {
+    //User attributes
+    id String @id @default(uuid())
+    name String
+    image String
+    email String @unique
+    phoneNumber String @unique
+
+    //Restaurant attributes
+    address String
+    cuisineType CuisineType
+    openHour String
+    closeHour String
+    isOpen Boolean @default(false)
+    ratingAvg Float @default(0)
+
+    //Menu relation attributes
+    menu Menu?
+
+    //DateTime attributes
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Menu {
+    //User attributes
+    id String @id @default(uuid())
+
+    //Restaurant relation attributes
+    restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+    restaurantId String @unique
+
+    //Dish relation attributes
+    dishes Dish[]
+
+    //DateTime attributes
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Dish {
+    //Dish attributes
+    id String @id @default(uuid())
+    name String
+    description String
+    image String
+    price Float
+    isAvailable Boolean @default(false)
+
+    //Menu relation attributes
+    menu Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+    menuId String
+
+    //Ingredient relation attributes
+    ingredients Ingredient[]
+
+    //Allergen relation attributes
+    allergens Allergens[]
+
+    //DateTime attributes
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Ingredient {
+    //Ingredient attributes
+    id String @id @default(uuid())
+    name String
+    isOptional Boolean @default(false)
+
+    //Dish relation attributes
+    dishes Dish[]
+
+    //DateTime attributes
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum Allergen {
+  Gluten
+  Lactose
+  Egg
+  Fish
+  Shellfish
+  Nuts
+  Soy
+  Celery
+  Mustard
+  Sesame
+  Others
+}
+
+model Allergens {
+    //Allergen attributes
+    id String @id @default(uuid())
+    name Allergen 
+
+    //Ingredient relation attributes
+    dishes Dish[]
+
+    //DateTime attributes
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
