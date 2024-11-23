@@ -1,8 +1,14 @@
 import {
+  IsArray,
+  IsEmail,
   IsEnum,
   IsMilitaryTime,
+  IsOptional,
   IsPhoneNumber,
   IsString,
+  IsUrl,
+  MaxLength,
+  ValidateNested,
 } from 'class-validator';
 import { AllergensList } from '../enum/allergen.enum';
 import { CuisineTypeList } from '../enum/cuisine-type.enum';
@@ -13,9 +19,11 @@ export class CreateRestaurantDto {
   name: string;
 
   @IsString()
+  @IsUrl()
   image: string;
 
   @IsString()
+  @IsEmail()
   email: string;
 
   @IsString()
@@ -23,6 +31,7 @@ export class CreateRestaurantDto {
   phoneNumber: string;
 
   @IsString()
+  @MaxLength(64)
   address: string;
 
   @IsEnum(CuisineTypeList, {

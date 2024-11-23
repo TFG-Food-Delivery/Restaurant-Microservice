@@ -63,44 +63,6 @@ model Menu {
     updatedAt DateTime @updatedAt
 }
 
-model Dish {
-    //Dish attributes
-    id String @id @default(uuid())
-    name String
-    description String
-    image String
-    price Float
-    isAvailable Boolean @default(false)
-
-    //Menu relation attributes
-    menu Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
-    menuId String
-
-    //Ingredient relation attributes
-    ingredients Ingredient[]
-
-    //Allergen relation attributes
-    allergens Allergens[]
-
-    //DateTime attributes
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-model Ingredient {
-    //Ingredient attributes
-    id String @id @default(uuid())
-    name String
-    isOptional Boolean @default(false)
-
-    //Dish relation attributes
-    dishes Dish[]
-
-    //DateTime attributes
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
 enum Allergen {
   Gluten
   Lactose
@@ -115,16 +77,48 @@ enum Allergen {
   Others
 }
 
-model Allergens {
-    //Allergen attributes
+
+model Dish {
+    //Dish attributes
     id String @id @default(uuid())
-    name Allergen 
+    name String
+    description String
+    image String
+    price Float
+    isAvailable Boolean @default(true)
+
+    //Menu relation attributes
+    menu Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+    menuId String
 
     //Ingredient relation attributes
-    dishes Dish[]
+    customIngredients CustomIngredient[]
+
+    //Allergen relation attributes
+    allergens Allergen[]
 
     //DateTime attributes
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // Unique constraint to enforce unique names per menu
+    @@unique([menuId, name])
 }
 
+model CustomIngredient {
+    //Ingredient attributes
+    id String @id @default(uuid())
+    name String
+    maxExtras Int @default(3) //Maximum number of extra quantity allowed
+
+    //Dish relation attributes
+    dish Dish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+    dishId String
+
+    //DateTime attributes
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Unique constraint to enforce unique names per menu
+    @@unique([dishId, name])
+}
