@@ -26,10 +26,7 @@ enum CuisineType {
 model Restaurant {
     //User attributes
     id String @id @default(uuid())
-    name String
-    image String
     email String @unique
-    phoneNumber String @unique
 
     //Restaurant attributes
     address String

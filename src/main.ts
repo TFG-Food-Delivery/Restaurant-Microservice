@@ -5,14 +5,14 @@ import { envs } from './config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const LOGGER = new Logger('Main');
+  const LOGGER = new Logger('Restaurant Microservice');
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
       transport: Transport.NATS,
       options: {
-        servers: ['nats://localhost:4222'],
+        servers: envs.natsServers,
       },
     },
   );
@@ -25,8 +25,6 @@ async function bootstrap() {
   );
 
   await app.listen();
-  LOGGER.log(
-    `Restaurants Management Microservice is running on port ${envs.port}`,
-  );
+  LOGGER.log(`Restaurants Management Microservice is running`);
 }
 bootstrap();

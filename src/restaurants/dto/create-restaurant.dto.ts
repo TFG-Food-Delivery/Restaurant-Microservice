@@ -16,19 +16,8 @@ import { CuisineType } from '@prisma/client';
 
 export class CreateRestaurantDto {
   @IsString()
-  name: string;
-
-  @IsString()
-  @IsUrl()
-  image: string;
-
-  @IsString()
   @IsEmail()
   email: string;
-
-  @IsString()
-  @IsPhoneNumber('ES')
-  phoneNumber: string;
 
   @IsString()
   @MaxLength(64)
