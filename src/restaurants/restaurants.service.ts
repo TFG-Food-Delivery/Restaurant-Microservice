@@ -10,12 +10,19 @@ import {
   UpdateDishDto,
 } from './dto';
 import { RpcException } from '@nestjs/microservices';
+import { readReplicas } from '@prisma/extension-read-replicas';
+import { envs } from 'src/config';
 
 @Injectable()
 export class RestaurantsService extends PrismaClient implements OnModuleInit {
   private readonly LOGGER = new Logger('RestaurantsService');
 
   onModuleInit() {
+    this.$extends(
+      readReplicas({
+        url: [envs.follower1DatabaseUrl, envs.follower2DatabaseUrl],
+      }),
+    );
     this.$connect();
     this.LOGGER.log('Connected to the database');
   }

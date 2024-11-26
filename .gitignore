@@ -57,5 +57,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Postgres database & Prisma migrations
 /postgres
-/prisma/migrations
 
