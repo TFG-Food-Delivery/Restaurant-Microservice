@@ -2,7 +2,9 @@ import {
   IsEmail,
   IsEnum,
   IsMilitaryTime,
+  IsOptional,
   IsString,
+  IsUrl,
   IsUUID,
   ValidateNested,
 } from 'class-validator';
@@ -26,6 +28,11 @@ export class CreateRestaurantDto {
 
   @IsString()
   restaurantName: string;
+
+  @IsString()
+  @IsUrl()
+  @IsOptional()
+  image: string;
 
   @IsEnum(CuisineTypeList, {
     message: `cuisineType must be one of the following values: ${CuisineTypeList}`,

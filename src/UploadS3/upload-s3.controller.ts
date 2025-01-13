@@ -6,9 +6,15 @@ import { UploadS3Service } from './upload-s3.service';
 export class UploadS3Controller {
   constructor(private readonly uploadS3service: UploadS3Service) {}
 
-  @MessagePattern('uploadDishImage')
-  async uploadImage(@Payload() data: any) {
+  @MessagePattern('uploadRestaurantImage')
+  async uploadRestaurantImage(@Payload() data: any) {
     const { restaurantId, file } = data;
-    return this.uploadS3service.uploadFile(file, restaurantId);
+    return this.uploadS3service.uploadRestaurantImage(file, restaurantId);
+  }
+
+  @MessagePattern('uploadDishImage')
+  async uploadDishImage(@Payload() data: any) {
+    const { restaurantId, file } = data;
+    return this.uploadS3service.uploadDishImage(file, restaurantId);
   }
 }

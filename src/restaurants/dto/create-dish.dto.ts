@@ -1,6 +1,7 @@
 import { Allergen } from '@prisma/client';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsNumber,
   IsOptional,
@@ -38,4 +39,8 @@ export class CreateDishDto {
     each: true,
   })
   allergens: Allergen[] = [];
+
+  @IsBoolean()
+  @IsOptional()
+  isAvailable: boolean;
 }

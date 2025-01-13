@@ -211,7 +211,7 @@ export class RestaurantsService extends PrismaClient implements OnModuleInit {
    */
   async createDish(id: string, createDishDto: CreateDishDto) {
     const restaurant = await this.findOneRestaurant(id);
-    console.log(createDishDto);
+
     const dish = await this.dish.create({
       data: {
         name: createDishDto.name,
@@ -271,6 +271,7 @@ export class RestaurantsService extends PrismaClient implements OnModuleInit {
                 image: true,
                 isAvailable: true,
                 allergens: true,
+                categoryId: true,
               },
             },
           },
@@ -436,9 +437,8 @@ export class RestaurantsService extends PrismaClient implements OnModuleInit {
    */
   async deleteDish(dishId: string) {
     await this.findOneDish(dishId);
-    const updatedDish = await this.dish.update({
+    const updatedDish = await this.dish.delete({
       where: { id: dishId },
-      data: { isAvailable: false },
     });
 
     return updatedDish;
