@@ -24,40 +24,49 @@ enum CuisineType {
 }
 
 model Restaurant {
-    //User attributes
-    id String @id @default(uuid())
-    email String @unique
+  //User attributes
+  id    String @id @default(uuid())
+  email String @unique
 
-    //Restaurant attributes
-    address String
-    cuisineType CuisineType
-    openHour String
-    closeHour String
-    isOpen Boolean @default(false)
-    ratingAvg Float @default(0)
+  //Restaurant attributes
+  name        String
+  description String      @default("")
+  image       String      @default("")
+  cuisineType CuisineType
+  openHour    String
+  closeHour   String
+  isOpen      Boolean     @default(false)
+  ratingAvg   Float       @default(0)
 
-    //Menu relation attributes
-    menu Menu?
+  //Menu relation attributes
+  dishes Dish[]
 
-    //DateTime attributes
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  //Address relation attributes
+  address Address?
+
+  //Category relation attributes
+  categories Category[]
+
+  //DateTime attributes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([cuisineType])
 }
 
-model Menu {
-    //User attributes
-    id String @id @default(uuid())
+model Category {
+  id           String     @id @default(uuid())
+  name         String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId String
 
-    //Restaurant relation attributes
-    restaurant Restaurant @relation(fields: [restaurantId], references: [id])
-    restaurantId String @unique
+  //Dish relation attributes
+  dishes Dish[]
 
-    //Dish relation attributes
-    dishes Dish[]
-
-    //DateTime attributes
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  //DateTime attributes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Allergen {
@@ -74,48 +83,42 @@ enum Allergen {
   Others
 }
 
-
 model Dish {
-    //Dish attributes
-    id String @id @default(uuid())
-    name String
-    description String
-    image String
-    price Float
-    isAvailable Boolean @default(true)
+  //Dish attributes
+  id          String  @id @default(uuid())
+  name        String
+  description String
+  image       String
+  price       Float
+  isAvailable Boolean @default(true)
 
-    //Menu relation attributes
-    menu Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
-    menuId String
+  //Menu relation attributes
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId String
 
-    //Ingredient relation attributes
-    customIngredients CustomIngredient[]
+  //Allergen relation attributes
+  allergens Allergen[]
 
-    //Allergen relation attributes
-    allergens Allergen[]
+  //DateTime attributes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    //DateTime attributes
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    // Unique constraint to enforce unique names per menu
-    @@unique([menuId, name])
+  Category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
 }
 
-model CustomIngredient {
-    //Ingredient attributes
-    id String @id @default(uuid())
-    name String
-    maxExtras Int @default(3) //Maximum number of extra quantity allowed
+model Address {
+  id             String  @id @default(uuid())
+  street         String
+  streetNumber   Int?
+  city           String
+  province       String
+  zipCode        String
+  additionalInfo String?
 
-    //Dish relation attributes
-    dish Dish @relation(fields: [dishId], references: [id], onDelete: Cascade)
-    dishId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId String     @unique
 
-    //DateTime attributes
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    // Unique constraint to enforce unique names per menu
-    @@unique([dishId, name])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

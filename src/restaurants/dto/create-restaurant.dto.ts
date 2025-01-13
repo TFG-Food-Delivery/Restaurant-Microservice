@@ -1,30 +1,34 @@
 import {
-  IsArray,
   IsEmail,
   IsEnum,
   IsMilitaryTime,
-  IsOptional,
-  IsPhoneNumber,
   IsString,
-  IsUrl,
-  MaxLength,
+  IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { AllergensList } from '../enum/allergen.enum';
-import { CuisineTypeList } from '../enum/cuisine-type.enum';
+import { Type } from 'class-transformer';
+
 import { CuisineType } from '@prisma/client';
+import { AddressDto } from './address.dto';
+import { CuisineTypeList } from '../enum';
 
 export class CreateRestaurantDto {
+  @IsUUID()
+  id: string;
+
   @IsString()
   @IsEmail()
   email: string;
 
+  @ValidateNested()
+  @Type(() => AddressDto)
+  address: AddressDto;
+
   @IsString()
-  @MaxLength(64)
-  address: string;
+  restaurantName: string;
 
   @IsEnum(CuisineTypeList, {
-    message: `cuisineType must be one of the following values: ${AllergensList}`,
+    message: `cuisineType must be one of the following values: ${CuisineTypeList}`,
   })
   cuisineType: CuisineType;
 

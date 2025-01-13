@@ -1,7 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateRestaurantDto } from './create-restaurant.dto';
+
 import { IsBoolean, IsOptional, IsUUID } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { CreateRestaurantDto } from './create-restaurant.dto';
 
 export class UpdateRestaurantDto extends PartialType(CreateRestaurantDto) {
   @IsUUID(4)

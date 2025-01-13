@@ -1,5 +1,4 @@
-import { Allergen, CustomIngredient } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { Allergen } from '@prisma/client';
 import {
   IsArray,
   IsEnum,
@@ -7,10 +6,12 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsUrl,
+  IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { CustomIngredientDto } from './custom-ingredient.dto';
 import { AllergensList } from '../enum';
+import { Type } from 'class-transformer';
 
 export class CreateDishDto {
   @IsString()
@@ -20,10 +21,15 @@ export class CreateDishDto {
   description: string;
 
   @IsString()
-  image: string;
+  @IsUrl()
+  image?: string;
+
+  @IsUUID()
+  categoryId: string;
 
   @IsNumber()
   @IsPositive()
+  @Type(() => Number)
   price: number;
 
   @IsArray()
@@ -31,11 +37,5 @@ export class CreateDishDto {
     message: `allergens must be one of the following values: ${AllergensList}`,
     each: true,
   })
-  allergens: Allergen[];
-
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true }) // Valida cada elemento del array
-  @Type(() => CustomIngredientDto) // Transforma los elementos en instancias de customIngredient
-  customIngredients: CustomIngredient[] = [];
+  allergens: Allergen[] = [];
 }
