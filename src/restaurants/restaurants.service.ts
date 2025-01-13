@@ -272,6 +272,7 @@ export class RestaurantsService extends PrismaClient implements OnModuleInit {
                 isAvailable: true,
                 allergens: true,
                 categoryId: true,
+                restaurantId: true,
               },
             },
           },
